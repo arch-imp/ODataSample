@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using ODataSample.Models;
 
-namespace ProductService.Models
+namespace ODataSample.Models
 {
     public class Supplier
     {
