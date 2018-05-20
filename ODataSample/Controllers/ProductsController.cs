@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.OData;
 using ODataSample.Models;
+using ProductService;
 
 namespace ODataSample.Controllers
 {
@@ -126,6 +128,36 @@ namespace ODataSample.Controllers
         {
             var result = db.Products.Where(m => m.Id == key).Select(m => m.Supplier);
             return SingleResult.Create(result);
+        }
+
+        [AcceptVerbs("POST", "PUT")]
+        public async Task<IHttpActionResult> CreateRef([FromODataUri] int key,
+            string navigationProperty, [FromBody] Uri link)
+        {
+            var product = await db.Products.SingleOrDefaultAsync(p => p.Id == key);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            switch (navigationProperty)
+            {
+                case "Supplier":
+                    // Note: The code for GetKeyFromUri is shown later in this topic.
+                    var relatedKey = Helpers.GetKeyFromUri<int>(Request, link);
+                    var supplier = await db.Suppliers.SingleOrDefaultAsync(f => f.Id == relatedKey);
+                    if (supplier == null)
+                    {
+                        return NotFound();
+                    }
+
+                    product.Supplier = supplier;
+                    break;
+
+                default:
+                    return StatusCode(HttpStatusCode.NotImplemented);
+            }
+            await db.SaveChangesAsync();
+            return StatusCode(HttpStatusCode.NoContent);
         }
     }
 }
