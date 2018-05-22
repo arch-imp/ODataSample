@@ -116,15 +116,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ActionMapExtensions.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
-    <Compile Include="Controllers\SuppliersController.cs" />
+    <Compile Include="Controllers\ManufacturersController.cs" />
+    <Compile Include="Controllers\ManufacturerRoutingConvention.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers.cs" />
+    <Compile Include="Models\Manufacturer.cs" />
     <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\ProductsContext.cs" />
-    <Compile Include="Models\Supplier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
