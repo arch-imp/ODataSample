@@ -38,21 +38,12 @@ namespace ODataSample.Controllers
         }
 
         [EnableQuery]
-        public SingleResult<Manufacturer> GetSingleton()
+        public SingleResult<Manufacturer> GetSingleton(string name)
         {
-            IEnumerable<Manufacturer> results;
-            var odataPath = Request.ODataProperties().Path;
-            if (odataPath.PathTemplate == "~/singleton")
-            {
-                var singletonSegment = (SingletonSegment)odataPath.Segments[0];
-                results = _manufacturers.Where(o => o.Name.Equals(singletonSegment.Singleton.Name, StringComparison.OrdinalIgnoreCase));
-            }
-            else
-            {
-                results = Enumerable.Empty<Manufacturer>();
-            }
+            var results = _manufacturers.Where(o => o.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
             return SingleResult.Create(results.AsQueryable());
         }
+
     }
 }

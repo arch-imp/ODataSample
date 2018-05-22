@@ -28,44 +28,18 @@ namespace ODataSample.Controllers
         public string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext,
             ILookup<string, HttpActionDescriptor> actionMap)
         {
-
             if (odataPath.PathTemplate == "~/singleton")
             {
-                SingletonSegment singletonSegment = (SingletonSegment)odataPath.Segments[0];
-                string httpMethodName = GetActionNamePrefix(controllerContext.Request.Method);
-
-                if (httpMethodName != null)
+                const string actionName = "GetSingleton";
+                if (actionMap.Contains(actionName))
                 {
-                    return actionMap.FindMatchingAction(
-                        httpMethodName + singletonSegment.Singleton.Name,
-                        httpMethodName + "Singleton",
-                        httpMethodName);
+                    var segment = odataPath.Segments[0] as SingletonSegment;
+                    controllerContext.RouteData.Values["name"] = segment.Singleton.Name;
+                    return actionName;
                 }
             }
 
             return null;
-        }
-
-        private static string GetActionNamePrefix(HttpMethod method)
-        {
-            string actionNamePrefix;
-            switch (method.Method.ToUpperInvariant())
-            {
-                case "GET":
-                    actionNamePrefix = "Get";
-                    break;
-                case "PUT":
-                    actionNamePrefix = "Put";
-                    break;
-                case "PATCH":
-                case "MERGE":
-                    actionNamePrefix = "Patch";
-                    break;
-                default:
-                    return null;
-            }
-
-            return actionNamePrefix;
         }
     }
 }
